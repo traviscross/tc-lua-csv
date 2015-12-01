@@ -22,6 +22,8 @@
 
 local csv={}
 
+-- Read first line of `stream` with fields separated by `sep`
+-- returning a list of header fields and an error or nil.
 local read_header
 function read_header(stream,sep)
   local l = stream:read()
@@ -30,6 +32,10 @@ function read_header(stream,sep)
   return hs
 end
 
+-- Read data from `stream` with fields separated by `sep` using
+-- `accfn` to accumulate results which are returned.  `accfn` takes
+-- two arguments, the accumulator object, and a list of fields in the
+-- current row.
 local read_data_f
 function read_data_f(stream,sep,accfn)
   local xs = {}
@@ -42,6 +48,8 @@ function read_data_f(stream,sep,accfn)
   return xs
 end
 
+-- Read data from `stream` with fields separated by `sep` and headers
+-- `hs` returning a list of objects.
 local read_data
 function read_data(stream,sep,hs)
   local accfn = function(xs,ls)
@@ -54,6 +62,8 @@ function read_data(stream,sep,hs)
   return read_data_f(stream,sep,accfn)
 end
 
+-- Read data from `stream` with fields separated by `sep` returning a
+-- list of objects, a list of headers, and an error or nil.
 local read_csv
 function read_csv(stream,sep)
   local hs,err = read_header(stream,sep)
@@ -63,6 +73,8 @@ function read_csv(stream,sep)
 end
 csv.read = read_csv
 
+-- Load data from `file` with fields separated by `sep` returning a
+-- list of objects, a list of headers, and an error or nil.
 local load_csv
 function load_csv(file,sep)
   local stream = io.open(file,"r")
@@ -73,6 +85,8 @@ function load_csv(file,sep)
 end
 csv.load = load_csv
 
+-- Print a list of objects `xs` with headers `hs` separated by `sep` to
+-- `stream` where the headers are keys for the objects in `xs`.
 local print_csv
 function print_csv(stream,sep,xs,hs)
   stream:write(table.join(hs,sep).."\n")
