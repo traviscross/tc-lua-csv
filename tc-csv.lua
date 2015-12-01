@@ -100,4 +100,17 @@ function print_csv(stream,sep,xs,hs)
 end
 csv.print = print_csv
 
+-- Save list of objects `xs` with headers `hs` separated by `sep` to
+-- `file` where the headers are keys for the objects in `xs` returning
+-- an error or nil.
+local save_csv
+function save_csv(file,sep,xs,hs)
+  local stream = io.open(file,"w")
+  if not stream then
+    return "Could not open file: "..file
+  end
+  return print_csv(stream,sep,xs,hs)
+end
+csv.save = save_csv
+
 return csv
